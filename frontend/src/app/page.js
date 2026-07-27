@@ -1,6 +1,6 @@
 // ref : 37aa88161f
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import BookForm from '@/components/BookForm';
 import BookList from '@/components/BookList';
@@ -20,8 +20,6 @@ export default function Home() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const isFirstRender = useRef(true);
-  const prevBooksCount = useRef(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,25 +48,10 @@ export default function Home() {
     fetchBooks();
   }, [router]);
 
-  //  State ของหนังสือ (Lifecycle Update)
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      prevBooksCount.current = books.length;
-      return;
-    }
-    
-    if (books.length > prevBooksCount.current) {
-      showToast('เพิ่มหนังสือเรียบร้อยแล้ว', 'success');
-    } else if (books.length < prevBooksCount.current) {
-      showToast('ลบหนังสือเรียบร้อยแล้ว', 'success');
-    }
-    prevBooksCount.current = books.length;
-  }, [books]);
-
   const handleBookAdded = (newBook) => {
     setBooks(prev => [newBook, ...prev]);
     setIsAddModalOpen(false);
+    showToast('เพิ่มหนังสือเรียบร้อยแล้ว', 'success');
   };
 
   const handleRequestDelete = (id) => {
@@ -105,6 +88,7 @@ export default function Home() {
       }
       
       setBooks(prev => prev.filter(b => b.id !== id));
+      showToast('ลบหนังสือเรียบร้อยแล้ว', 'success');
     } catch (err) {
       showToast(err.message, 'error');
     }
