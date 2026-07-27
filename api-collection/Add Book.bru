@@ -1,0 +1,23 @@
+meta {
+  name: Add Book
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:5000/api/books
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: YOUR_TOKEN_HERE
+}
+
+body:json {
+  {
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "category": "Self-Help"
+  }
+}
